@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DEFECTS>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\JuanPablo\Documents\Visual Studio 2019\Projects\Exam\Exam\</FILEPATH>
+      <FILENAME>Source2.cpp</FILENAME>
+      <LINE>15</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'Node::x' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>Node::{ctor}</FUNCTION>
+    <DECORATED>??0Node@@QAE@XZ</DECORATED>
+    <FUNCLINE>15</FUNCLINE>
+    <ADDITIONALINFO>
+      <targetSymbol>Node::x</targetSymbol>
+    </ADDITIONALINFO>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\JuanPablo\Documents\Visual Studio 2019\Projects\Exam\Exam\</FILEPATH>
+      <FILENAME>Source2.cpp</FILENAME>
+      <LINE>15</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'Node::dist' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>Node::{ctor}</FUNCTION>
+    <DECORATED>??0Node@@QAE@XZ</DECORATED>
+    <FUNCLINE>15</FUNCLINE>
+    <ADDITIONALINFO>
+      <targetSymbol>Node::dist</targetSymbol>
+    </ADDITIONALINFO>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\JuanPablo\Documents\Visual Studio 2019\Projects\Exam\Exam\</FILEPATH>
+      <FILENAME>Source2.cpp</FILENAME>
+      <LINE>15</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'Node::accumulateCost' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>Node::{ctor}</FUNCTION>
+    <DECORATED>??0Node@@QAE@XZ</DECORATED>
+    <FUNCLINE>15</FUNCLINE>
+    <ADDITIONALINFO>
+      <targetSymbol>Node::accumulateCost</targetSymbol>
+    </ADDITIONALINFO>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\JuanPablo\Documents\Visual Studio 2019\Projects\Exam\Exam\</FILEPATH>
+      <FILENAME>Source2.cpp</FILENAME>
+      <LINE>15</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'Node::cost' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>Node::{ctor}</FUNCTION>
+    <DECORATED>??0Node@@QAE@XZ</DECORATED>
+    <FUNCLINE>15</FUNCLINE>
+    <ADDITIONALINFO>
+      <targetSymbol>Node::cost</targetSymbol>
+    </ADDITIONALINFO>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\JuanPablo\Documents\Visual Studio 2019\Projects\Exam\Exam\</FILEPATH>
+      <FILENAME>Source2.cpp</FILENAME>
+      <LINE>15</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'Node::y' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>Node::{ctor}</FUNCTION>
+    <DECORATED>??0Node@@QAE@XZ</DECORATED>
+    <FUNCLINE>15</FUNCLINE>
+    <ADDITIONALINFO>
+      <targetSymbol>Node::y</targetSymbol>
+    </ADDITIONALINFO>
+    <PATH></PATH>
+  </DEFECT>
+</DEFECTS>
