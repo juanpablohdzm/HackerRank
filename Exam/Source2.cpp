@@ -1,151 +1,183 @@
-#include <vector>
-#include <tuple>
-#include <list>
-#include <algorithm>
 #include <deque>
+#include <fstream>
+#include <functional>
 #include <iostream>
-#include <map>
+#include <list>
+#include <ostream>
+#include <string>
+#include <vector>
 
-using namespace std;
-enum class Direction { FROM_AIRPORT = 1, TO_AIRPORT = -1 };
+using namespace  std;
+
+const int FromAirport[] = { 0,1,1,0 };
+const int ToAirport[] = { 0,-1,-1,0 };
+
+enum class Direction { FROM_AIRPORT, TO_AIRPORT };
 
 struct Node
 {
-public:
-	Node() {};
-	Node(int X, int Y, int Cost) : x(X), y(Y), cost(Cost), accumulateCost(Cost)
+	int amount;
+	Node* parent;
+	int x, y;
+
+
+	friend bool operator==(const Node& lhs, const Node& rhs)
 	{
-		dist = sqrt(x * x + y * y);
+		return lhs.x == rhs.x
+			&& lhs.y == rhs.y;
 	}
 
-	int x, y, cost, accumulateCost;
-	float dist;
-	bool operator<(const Node& rhs) const
+	friend bool operator!=(const Node& lhs, const Node& rhs)
 	{
-		return dist < rhs.dist;
+		return !(lhs == rhs);
+	}
+
+	friend bool operator<(const Node& lhs, const Node& rhs)
+	{
+		return lhs.amount < rhs.amount;
+	}
+
+	friend bool operator<=(const Node& lhs, const Node& rhs)
+	{
+		return !(rhs < lhs);
+	}
+
+	friend bool operator>(const Node& lhs, const Node& rhs)
+	{
+		return rhs < lhs;
+	}
+
+	friend bool operator>=(const Node& lhs, const Node& rhs)
+	{
+		return !(lhs < rhs);
+	}
+
+	friend std::ostream& operator<<(std::ostream& os, const Node& obj)
+	{
+		return os
+			<< "amount: " << obj.amount
+			<< " x: " << obj.x
+			<< " y: " << obj.y << endl;
 	}
 };
 
-
-void GetPossibleCoordinates(Direction direction, const Node& currentCoordinate, vector<Node>& possibleNeighbors)
+Node* CreateNode(int amount, Node* parent, int X, int Y)
 {
+	return new Node{ amount, parent,X,Y };
+}
+
+vector<Node*> CheckAdjacency(const vector<vector<int>>& mat, Node* current, Direction direction)
+{
+	const int* coordiantes;
+	vector<Node*> adj;
 	switch (direction)
 	{
-	case Direction::FROM_AIRPORT:
-		possibleNeighbors = vector<Node>{ Node(currentCoordinate.x,currentCoordinate.y + 1,0),
-							 Node(currentCoordinate.x + 1,currentCoordinate.y,0) };
-		break;
 	case Direction::TO_AIRPORT:
-		possibleNeighbors = vector<Node>{ Node(currentCoordinate.x,currentCoordinate.y - 1,0),
-							 Node(currentCoordinate.x - 1,currentCoordinate.y,0) };
+		coordiantes = ToAirport;
+		break;
+	case Direction::FROM_AIRPORT:
+	default:
+		coordiantes = FromAirport;
 		break;
 	}
-}
 
-
-void CheckAdjacency(Direction direction, const vector<vector<int>>& mat, const Node& currentCoordinate, vector<Node>& possibleCoordinates)
-{
-	vector<Node> possibleNeighbors;
-	GetPossibleCoordinates(direction, currentCoordinate, possibleNeighbors);
-
-	for (Node& node : possibleNeighbors)
+	int n = mat.size();
+	for (int i = 0; i < 4; i += 2)
 	{
-		int x = node.x;
-		int y = node.y;
-		if (x >= mat.size() || y >= mat.size() || x < 0 || y < 0) continue;
-		node.cost = mat[x][y];
-		if (x + (int)direction < mat.size() && y < mat.size() && x + (int)direction >= 0 && y >= 0)
-			node.accumulateCost += mat[x + (int)direction][y];
-		if (x < mat.size() && y + (int)direction < mat.size() && x >= 0 && y + (int)direction >= 0)
-			node.accumulateCost += mat[x][y + (int)direction];
+		int x = current->x + *(coordiantes + i);
+		int y = current->y + *(coordiantes + i + 1);
 
-		node.accumulateCost = node.cost + currentCoordinate.cost;
+		if (x < 0 || y < 0 || x >= n || y >= n)
+			continue;
 
-		if (node.cost >= 0)
-		{
-			possibleCoordinates.push_back(node);
-		}
+		int value = mat[x][y];
+		if (value == -1)
+			continue;
+
+		Node* node = CreateNode(current->amount + value, current, x, y);
+		adj.push_back(node);
 	}
+	return adj;
 }
 
-bool SortVector(const Node& lh, const Node& rh)
+vector<Node> Travel(const vector<vector<int>>& mat, int n, int startX, int startY, int finishX, int finishY, Direction direction)
 {
-	return lh.cost + lh.accumulateCost > rh.cost + rh.accumulateCost;
-}
+	deque<Node*> possibleFinishNodes;
+	list<Node*> queue;
 
-bool TravelPath(Direction direction, map<Node, Node>& path, Node& currentCoordinate, const int& n, vector<vector<int>>& mat2, int xGoal, int yGoal, int xStart, int yStart)
-{
-	deque<Node> coordinates;
-	coordinates.push_front(Node(xStart, yStart, mat2[xStart][yStart]));
-	bool pathFound = false;
+	Node* node = CreateNode(mat[startX][startY], nullptr, startY, startY);
+	queue.push_back(node);
+	list<Node*>::iterator it = queue.begin();
 
-	while (coordinates.size() != 0)
+	do
 	{
-		currentCoordinate = coordinates.front();
-		coordinates.pop_front();
-
-		if (currentCoordinate.x == xGoal && currentCoordinate.y == yGoal)
+		node = *it;
+		if (node->x == finishX && node->y == finishY)
 		{
-			return true;
+			possibleFinishNodes.push_back(node);
 		}
 
-		vector<Node> possibleCoordinates;
-		CheckAdjacency(direction, mat2, currentCoordinate, possibleCoordinates);
-
-		for (const Node& node : possibleCoordinates)
+		vector<Node*> adj = CheckAdjacency(mat, node, direction);
+		for (Node* neighbor : adj)
 		{
-			coordinates.push_front(node);
-			path[node] = currentCoordinate;
-		}
-		if (coordinates.size())
-		{
-			sort(coordinates.begin(), coordinates.end(), SortVector);
+			queue.push_back(neighbor);
 		}
 
+		it++;
+	} while (it != queue.end());
+
+	vector<Node> path;
+	if (possibleFinishNodes.empty())
+		return path;
+
+	Node* bestNode = possibleFinishNodes[0];
+	for (int i = 1; i < possibleFinishNodes.size(); ++i)
+	{
+		if (*possibleFinishNodes[i] > * bestNode)
+			bestNode = possibleFinishNodes[i];
 	}
-	return false;
+
+	while (bestNode)
+	{
+		path.push_back(*bestNode);
+		if (direction == Direction::TO_AIRPORT)
+			break;
+		bestNode = bestNode->parent;
+	}
+
+	for (list<Node*>::reverse_iterator it = queue.rbegin(); it != queue.rend(); ++it)
+	{
+		delete* it;
+	}
+
+	return path;
+
+}
+
+void ResetRecollectedTiles(vector<vector<int>>& mat, const vector<Node> path)
+{
+	for (const Node& node : path)
+	{
+		mat[node.x][node.y] = 0;
+	}
 }
 
 
 int collectMax(vector<vector<int>> mat)
 {
-	vector<vector<int>> mat2 = mat;
-	int n = mat2.size();
-	int passengers = 0;
+	if (mat[mat.size() - 1][mat.size() - 1] == -1) return 0;
 
-	map<Node, Node> path;
-	Node currentCoordinate;
-	if (TravelPath(Direction::FROM_AIRPORT, path, currentCoordinate, n, mat2, n - 1, n - 1, 0, 0))
-	{
-		while (!(currentCoordinate.x == 0 && currentCoordinate.y == 0))
-		{
-			passengers += mat2[currentCoordinate.x][currentCoordinate.y];
-			mat2[currentCoordinate.x][currentCoordinate.y] = 0;
-			currentCoordinate = path[currentCoordinate];
-		}
-		path.clear();
-		if (TravelPath(Direction::TO_AIRPORT, path, currentCoordinate, n, mat2, 0, 0, n - 1, n - 1))
-		{
-			while (!(currentCoordinate.x == n - 1 && currentCoordinate.y == n - 1))
-			{
-				passengers += mat2[currentCoordinate.x][currentCoordinate.y];
-				mat2[currentCoordinate.x][currentCoordinate.y] = 0;
-				currentCoordinate = path[currentCoordinate];
-			}
-		}
-	}
-
-
-
-	return passengers;
-
+	int total = 0;
+	vector<Node> path = Travel(mat, mat.size(), 0, 0, mat.size() - 1, mat.size() - 1, Direction::FROM_AIRPORT);
+	if (path.empty()) return 0;
+	ResetRecollectedTiles(mat, path);
+	total = path[0].amount;
+	total += Travel(mat, mat.size(), mat.size() - 1, mat.size() - 1, 0, 0, Direction::TO_AIRPORT)[0].amount;
+	return total;
 }
 
-
-
-int main()
+int main(int argc, char* argv[])
 {
-	vector<vector<int>> mat{ vector<int>{0,1,-1}, vector<int>{1,0,-1}, vector<int>{1,1,1} };
-	int x = collectMax(mat);
-	cout << x << endl;
+
+	return 0;
 }
