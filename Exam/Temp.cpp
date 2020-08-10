@@ -1,106 +1,155 @@
-// enum class Direction { FROM_AIRPORT = 1, TO_AIRPORT = -1 };
-// 
-// 
-// void GetPossibleCoordinates(Direction direction, const tuple<int, int, int>& currentCoordinate, vector<tuple<int, int>>& possibleNeighbors)
-// {
-// 	switch (direction)
-// 	{
-// 	case Direction::FROM_AIRPORT:
-// 		possibleNeighbors = vector<tuple<int, int>>{ make_pair(get<0>(currentCoordinate),get<1>(currentCoordinate) + 1),
-// 							 make_pair(get<0>(currentCoordinate) + 1,get<1>(currentCoordinate)) };
-// 		break;
-// 	case Direction::TO_AIRPORT:
-// 		possibleNeighbors = vector<tuple<int, int>>{ make_pair(get<0>(currentCoordinate),get<1>(currentCoordinate) - 1),
-// 							 make_pair(get<0>(currentCoordinate) - 1,get<1>(currentCoordinate)) };
-// 		break;
-// 	}
-// }
-// 
-// 
-// void CheckAdjacency(Direction direction, const vector<vector<int>>& mat, const tuple<int, int, int>& currentCoordinate, vector<tuple<int, int, int>>& possibleCoordinates)
-// {
-// 	vector<tuple<int, int>> possibleNeighbors;
-// 	GetPossibleCoordinates(direction, currentCoordinate, possibleNeighbors);
-// 
-// 	for (const tuple<int, int>& node : possibleNeighbors)
-// 	{
-// 		int x = get<0>(node);
-// 		int y = get<1>(node);
-// 		if (x >= mat.size() || y >= mat.size() || x < 0 || y < 0) continue;
-// 		int result = mat[x][y];
-// 		if (x + (int)direction < mat.size() && x + (int)direction >= 0)
-// 			result += mat[x + (int)direction][y];
-// 		if (y + (int)direction < mat.size() && y + (int)direction >= 0)
-// 			result += mat[x][y + (int)direction];
-// 
-// 		if (mat[x][y] >= 0)
-// 		{
-// 			possibleCoordinates.push_back(tuple<int, int, int>(x, y, result));
-// 		}
-// 	}
-// }
-// 
-// bool SortVector(const tuple<int, int, int>& lh, const tuple<int, int, int>& rh)
-// {
-// 	return get<2>(lh) > get<2>(rh);
-// }
-// 
-// void TravelPath(Direction direction, int& passengers, const int& n, vector<vector<int>>& mat2, int xGoal, int yGoal, int xStart, int yStart)
-// {
-// 	deque<tuple<int, int, int>> coordinates;
-// 	coordinates.push_front(tuple<int, int, int>(xStart, yStart, mat2[xStart][yStart]));
-// 	bool pathFound = false;
-// 
-// 	while (coordinates.size() != 0)
-// 	{
-// 		tuple<int, int, int> currentCoordinate = coordinates.front();
-// 		passengers += mat2[get<0>(currentCoordinate)][get<1>(currentCoordinate)];
-// 		mat2[get<0>(currentCoordinate)][get<1>(currentCoordinate)] = 0;
-// 		coordinates.pop_front();
-// 
-// 		if (currentCoordinate == tuple<int, int, int>(xGoal, yGoal, get<2>(currentCoordinate)))
-// 		{
-// 			pathFound = true;
-// 			break;
-// 		}
-// 
-// 		vector<tuple<int, int, int>> possibleCoordinates;
-// 		CheckAdjacency(direction, mat2, currentCoordinate, possibleCoordinates);
-// 
-// 		for (const tuple<int, int, int>& node : possibleCoordinates)
-// 		{
-// 			int x = get<0>(node);
-// 			int y = get<1>(node);
-// 
-// 			coordinates.push_front(node);
-// 
-// 
-// 		}
-// 		if (coordinates.size())
-// 		{
-// 			sort(coordinates.begin(), coordinates.end(), SortVector);
-// 			coordinates.resize(1);
-// 
-// 		}
-// 
-// 	}
-// 	if (!pathFound)
-// 		passengers = 0;
-// }
-// 
-// 
-// int collectMax(vector<vector<int>> mat)
-// {
-// 	vector<vector<int>> mat2 = mat;
-// 	int n = mat2.size();
-// 	int passengers = 0;
-// 
-// 	TravelPath(Direction::FROM_AIRPORT, passengers, n, mat2, n - 1, n - 1, 0, 0);
-// 
-// 	TravelPath(Direction::TO_AIRPORT, passengers, n, mat2, 0, 0, n - 1, n - 1);
-// 
-// 
-// 
-// 	return passengers;
-// 
-// }
+#include <iostream>
+#include <fstream>
+#include <filesystem>
+#include <string>
+#include <algorithm>
+#include <queue>
+#include <cstdarg> //va_arg...
+#include <functional>
+namespace fs = std::filesystem;
+
+class A
+{
+public:
+	void TestFunction()
+	{
+		std::cout << "Test Function in object" << std::endl;
+	}
+	A()
+	{
+		std::cout << "Default" << std::endl;
+	}
+	A(const A& other)
+	{
+		std::cout << "Copy" << std::endl;
+	}
+
+	A(const A&& other)
+	{
+		std::cout << "Move" << std::endl;
+	}
+
+	void operator=(const A& other)
+	{
+		std::cout << "Assignment" << std::endl;
+	}
+};
+
+void TestFunction()
+{
+	std::cout << "Test Function" << std::endl;
+
+}
+
+template<typename Args>
+void VariadicFunction(size_t n, ...)
+{
+	va_list  args;
+	va_start(args, n);
+	for (size_t i = 0; i < n; i++)
+	{
+		std::cout << va_arg(args, Args) << std::endl;
+	}
+	va_end(args);
+}
+
+template<typename Args>
+void Callbacks(size_t count, ...)
+{
+	va_list args;
+	va_start(args, count);
+	for (size_t i = 0; i < count; i++)
+	{
+		auto f = va_arg(args, Args);
+		f();
+	}
+	va_end(args);
+}
+
+template<class Class, typename Args>
+void Callbacks(Class* obj, size_t count, ...)
+{
+	va_list args;
+	va_start(args, count);
+	for (size_t i = 0; i < count; i++)
+	{
+		(obj->*va_arg(args, Args))();
+	}
+	va_end(args);
+}
+
+int main()
+{
+	VariadicFunction<int>(3, 2, 3, 7);
+
+	//std::function<void()> f = []() {std::cout << "Object" << std::endl; };
+	void(*p)() = []() {std::cout << "Object" << std::endl; };
+	void(*r)() = TestFunction;
+	Callbacks<void(*)()>(2, p, r);
+
+	A a;
+	Callbacks<A, void(A::*)()>(&a, 3, &A::TestFunction, &A::TestFunction, &A::TestFunction);
+
+
+	int m[3][3] = { {1,2,3},{4,5,6},{7,8,9} };
+	std::vector<int> n(9);
+	std::copy(&m[0][0], &m[0][0] + 9, n.begin());
+
+	std::vector<A> vec1(4);
+	A vec2[4];
+	std::copy(vec1.begin(), vec1.end(), vec2);
+
+	int** k = new int* [3]{};
+	for (size_t i = 0; i < 3; i++)
+	{
+		k[i] = new int[3]{};
+		for (size_t j = 0; j < 3; j++)
+		{
+			k[i][j] = j;
+		}
+	}
+
+	for (size_t i = 0; i < 3; i++)
+	{
+		delete[] k[i];
+	}
+	delete[] k;
+
+
+	for (size_t i = 0; i < 9; i++)
+	{
+		int* j = &m[0][0] + i;
+		std::cout << *j << std::endl;
+	}
+
+
+	fs::create_directory("Tests");
+	{
+		std::ofstream file("Tests/Hello.txt");
+		if (file.is_open())
+		{
+			file << "Hello World\n";
+			file << "Second world";
+		}
+		file.close();
+	}
+	{
+		std::ifstream file("Tests/Hello.txt", std::ios::binary | std::ios::ate);
+		if (file.is_open())
+		{
+			const size_t size = static_cast<size_t>(file.tellg());
+			file.seekg(0);
+			std::string line(size, '\0');
+			file.read(line.data(), size);
+			std::cout << line << std::endl;
+			file.seekg(0);
+			while (!file.eof())
+			{
+				std::string l;
+				getline(file, l);
+				std::cout << l;
+			}
+			file.close();
+		}
+	}
+}
