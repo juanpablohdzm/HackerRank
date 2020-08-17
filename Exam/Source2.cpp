@@ -175,9 +175,3 @@ int collectMax(vector<vector<int>> mat)
 	total += Travel(mat, mat.size(), mat.size() - 1, mat.size() - 1, 0, 0, Direction::TO_AIRPORT)[0].amount;
 	return total;
 }
-
-int main(int argc, char* argv[])
-{
-
-	return 0;
-}

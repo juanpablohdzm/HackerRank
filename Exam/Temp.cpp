@@ -8,7 +8,14 @@
 #include <functional>
 namespace fs = std::filesystem;
 
-class A
+class Interface
+{
+public:
+	virtual void Get() = 0;
+	virtual void Set() = 0;
+};
+
+class A : public Interface
 {
 public:
 	void TestFunction()
@@ -33,6 +40,33 @@ public:
 	{
 		std::cout << "Assignment" << std::endl;
 	}
+
+	void Get() override
+	{
+		throw std::logic_error("The method or operation is not implemented.");
+	}
+
+
+	void Set() override
+	{
+		throw std::logic_error("The method or operation is not implemented.");
+	}
+
+};
+class B
+{
+public:
+	void Get()
+	{
+		throw std::logic_error("The method or operation is not implemented.");
+	}
+
+
+	void Set() 
+	{
+		throw std::logic_error("The method or operation is not implemented.");
+	}
+
 };
 
 void TestFunction()
@@ -78,8 +112,52 @@ void Callbacks(Class* obj, size_t count, ...)
 	va_end(args);
 }
 
+
+class Singleton
+{
+private:
+	Singleton()
+	{
+		std::cout << "Hello" << std::endl;
+	}
+
+public:
+	Singleton(const Singleton& other) = delete;
+	Singleton& operator=(const Singleton& other) = delete;
+
+	int a = 0;
+	static Singleton* get_instance()
+	{
+		static Singleton instance;
+		return &instance;
+	}
+};
+
+template<class Class = Interface>
+class ConditionClass
+{
+public:
+	ConditionClass()
+	{
+		static_assert(std::is_base_of<Interface, Class>::value,"Class should inherit from Interface");
+	}
+	Class obj;
+
+	void Do() { obj.Get(); }
+};
+
+
 int main()
 {
+	ConditionClass<A> cc;
+
+
+
+	Singleton* pt = Singleton::get_instance();
+	pt->a = 2;
+	Singleton* pr = Singleton::get_instance();
+	std::cout << pr->a;
+
 	VariadicFunction<int>(3, 2, 3, 7);
 
 	//std::function<void()> f = []() {std::cout << "Object" << std::endl; };

@@ -1,15 +1,2 @@
-﻿  Source.cpp
-  Source1.cpp
-  Source2.cpp
-C:\Users\JuanPablo\Documents\Visual Studio 2019\Projects\Exam\Exam\Source2.cpp(18,14): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\JuanPablo\Documents\Visual Studio 2019\Projects\Exam\Exam\Source2.cpp(55,9): warning C4018: '>=': signed/unsigned mismatch
-C:\Users\JuanPablo\Documents\Visual Studio 2019\Projects\Exam\Exam\Source2.cpp(55,28): warning C4018: '>=': signed/unsigned mismatch
-C:\Users\JuanPablo\Documents\Visual Studio 2019\Projects\Exam\Exam\Source2.cpp(57,26): warning C4018: '<': signed/unsigned mismatch
-C:\Users\JuanPablo\Documents\Visual Studio 2019\Projects\Exam\Exam\Source2.cpp(57,44): warning C4018: '<': signed/unsigned mismatch
-C:\Users\JuanPablo\Documents\Visual Studio 2019\Projects\Exam\Exam\Source2.cpp(59,9): warning C4018: '<': signed/unsigned mismatch
-C:\Users\JuanPablo\Documents\Visual Studio 2019\Projects\Exam\Exam\Source2.cpp(59,44): warning C4018: '<': signed/unsigned mismatch
-  Temp.cpp
-  Compiling...
-  Generating Code...
-  Exam.vcxproj -> C:\Users\JuanPablo\Documents\Visual Studio 2019\Projects\Exam\Debug\Exam.exe
-C:\Users\JuanPablo\Documents\Visual Studio 2019\Projects\Exam\Exam\Source2.cpp(15): warning C26495: Variable 'Node::x' is uninitialized. Always initialize a member variable (type.6).
+﻿  Temp.cpp
+  Exam.vcxproj -> D:\Legacy\Visual Studio Projects\Hacker\Debug\Exam.exe
